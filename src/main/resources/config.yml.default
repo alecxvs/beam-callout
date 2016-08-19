@@ -1,0 +1,21 @@
+---
+# These settings require a restart to take effect
+username: #set me
+channel_id: #set me
+
+
+default_cooldown: 10
+sounds:
+  - path: 'sounds/wow.wav'
+    cooldown: 5 # Optional cooldown, will use default otherwise
+  - path: 'sounds/die.mp3'
+  - path: 'sounds/shut_up_wesley.mp3'
+  - path: 'sounds/rejoicing.mp3'
+  - path: 'sounds/let_the_hate.mp3'
+  - path: 'sounds/gameover.mp3'
+
+# Groups are basically cooldown groups, where when a sound is played in a group, all sounds from that group are
+# put on cooldown.
+groups:
+  - cooldown: 30
+    sounds: [3, 4, 5]
