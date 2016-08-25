@@ -34,6 +34,9 @@ val config: Config = {
 
 var robot: Robot? = null
 
+var currentReport: Protocol.ProgressUpdate.Builder = Protocol.ProgressUpdate.newBuilder()
+var currentReportModified: Boolean = false
+
 fun main(args : Array<String>) {
     // Load Beam API
     if (config.auth_key == null) {
@@ -81,11 +84,10 @@ fun main(args : Array<String>) {
         TactileListener.Master.onUpdate{
             val progress = Protocol.ProgressUpdate.TactileUpdate.newBuilder()
             progress.id = it.id
-            progress.progress = it.percent / 0.3
+            progress.progress = Math.min(it.percent / 0.3, 1.0)
             if (it.percent > 0.3) {
                 if (caller.playSound(it.id)) {
-                    progress.progress = 1.0
-                    progress.cooldown = caller.sounds[it.id].cooldown.times(1000)
+//                    progress.cooldown = (caller.sounds[it.id].cooldown ?: config.default_cooldown).times(1000)
                     progress.fired = true
                 }
             }

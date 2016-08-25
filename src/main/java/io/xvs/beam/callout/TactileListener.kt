@@ -7,14 +7,17 @@ class TactileListener(val action: (InteractionSummary) -> Protocol.ProgressUpdat
     companion object Master : EventListener<Protocol.Report> {
         private val listeners = mutableListOf<TactileListener>()
         override fun handle(report: Protocol.Report) {
+            currentReport = Protocol.ProgressUpdate.newBuilder()
             if (report.users.connected > 0) {
-                val progress = Protocol.ProgressUpdate.newBuilder()
                 for (tactile in report.tactileList) {
                     if (tactile.hasHolding()) {
-                        progress.addTactile(listeners.getOrNull(tactile.id)?.update(report, tactile))
+                        currentReport.addTactile(listeners.getOrNull(tactile.id)?.update(report, tactile))
+                        currentReportModified = true
                     }
                 }
-                robot!!.write(progress.build())
+            }
+            if (currentReportModified) {
+                robot!!.write(currentReport.build())
             }
         }
 
